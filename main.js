@@ -71,9 +71,12 @@ var app = http.createServer(function(request,response){
           body = body + data;
       });
       request.on('end', function(){
-          var post = qs.parse(body);
-          var title = post.title;
-          var description = post.description;
+          //var post = qs.parse(body);
+          var post = new URLSearchParams(body);   
+          //var title = post.title;
+          var title = post.get('title');
+          //var description = post.description;
+          var description = post.get('description');
           fs.writeFile(`data/${title}`, description, 'utf8', function(err){
             response.writeHead(302, {Location: `/?id=${title}`});
             response.end();
@@ -110,10 +113,14 @@ var app = http.createServer(function(request,response){
           body = body + data;
       });
       request.on('end', function(){
-          var post = qs.parse(body);
-          var id = post.id;
-          var title = post.title;
-          var description = post.description;
+          //var post = qs.parse(body);
+          var post = new URLSearchParams(body);   
+          // var id = post.id; 
+          // var title = post.title;
+          // var description = post.description;
+          var id = post.get('id') ;
+          var title = post.get('title');
+          var description = post.get('description');
           fs.rename(`data/${id}`, `data/${title}`, function(error){
             fs.writeFile(`data/${title}`, description, 'utf8', function(err){
               response.writeHead(302, {Location: `/?id=${title}`});
@@ -127,8 +134,10 @@ var app = http.createServer(function(request,response){
           body = body + data;
       });
       request.on('end', function(){
-          var post = qs.parse(body);
-          var id = post.id;
+        //var post = qs.parse(body);
+          var post = new URLSearchParams(body);         
+          //var id = post.id;
+          var id = post.get('id') ;
           var filteredId = path.parse(id).base;
           fs.unlink(`data/${filteredId}`, function(error){
             response.writeHead(302, {Location: `/`});
